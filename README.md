@@ -8,4 +8,4 @@ TODO:
 - [x] [Tutorial](https://nextjs.org/learn/basics/create-nextjs-app)
 - [x] GET from the api
 - [x] Environment variables
-- [] Cypress testing
+- [ ] Cypress testing
