@@ -1,28 +1,24 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Date from '../components/date'
-import { getSortedPostsData } from '../lib/posts'
-import Layout, { siteTitle } from '../components/layout'
+import {getSortedPostsData} from '../lib/posts'
+import Layout, {siteTitle} from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 
-import useSWR from 'swr'
-
-function Profile() {
-  const { data, error } = useSWR('/api/user', fetch) || {data: {name: 'Natasha'}}
-
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
-  return <div>hello {data.name}!</div>
+function Profile({profile={}}) {
+  if (profile.error) return <div>failed to load</div>
+  if (!profile.name) return <div>loading...</div>
+  return <div>hello {profile.name}!</div>
 }
 
-export default function Home({ allPostsData }) {
+export default function Home({allPostsData, profile}) {
   return (
     <Layout home>
       <Head>…</Head>
       <section className={utilStyles.headingMd}>…</section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
-        <Profile />
+        <Profile profile={profile} />
         <ul className={utilStyles.list}>
           {allPostsData.map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
@@ -44,16 +40,10 @@ export default function Home({ allPostsData }) {
 export async function getStaticProps() {
   // Get external data from the file system, API, DB, etc.
   const allPostsData = getSortedPostsData()
+  const profileData = await fetch('http://localhost:3000/api/user')
+  const profile = await profileData.json()
 
   return {
-    props: {allPostsData}
+    props: {allPostsData, profile}
   }
 }
-
-// export async function getServerSideProps(context) {
-//   return {
-//     props: {
-//       // props for your component
-//     }
-//   }
-// }
