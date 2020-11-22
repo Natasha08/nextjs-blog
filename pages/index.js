@@ -40,10 +40,10 @@ export default function Home({allPostsData, profile}) {
 export async function getStaticProps() {
   // Get external data from the file system, API, DB, etc.
   const allPostsData = getSortedPostsData()
-  const profileData = await fetch(`${process.env.API_HOST}/api/user`)
+  const profileData = await fetch(`${process.env.API_HOST}/api/hello`)
   const profile = await profileData.json()
 
   return {
-    props: {allPostsData, profile}
+    props: {allPostsData, profile: {name: 'Natasha O'}}
   }
 }
