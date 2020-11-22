@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Date from '../components/date'
 import { getSortedPostsData } from '../lib/posts'
 import Layout, { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
@@ -7,9 +8,8 @@ import utilStyles from '../styles/utils.module.css'
 import useSWR from 'swr'
 
 function Profile() {
-  const { data, error } = useSWR('/api/user', fetch)
-  console.log("DATA++++++++++", data)
-  console.log("ERROR++++++++", error)
+  const { data, error } = useSWR('/api/user', fetch) || {data: {name: 'Natasha'}}
+
   if (error) return <div>failed to load</div>
   if (!data) return <div>loading...</div>
   return <div>hello {data.name}!</div>
@@ -26,11 +26,13 @@ export default function Home({ allPostsData }) {
         <ul className={utilStyles.list}>
           {allPostsData.map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
-              {title}
+              <Link href={`/posts/${id}`}>
+                <a>{title}</a>
+              </Link>
               <br />
-              {id}
-              <br />
-              {date}
+              <small className={utilStyles.lightText}>
+                <Date dateString={date} />
+              </small>
             </li>
           ))}
         </ul>
